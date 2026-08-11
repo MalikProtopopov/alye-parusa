@@ -1,0 +1,22 @@
+.sail {
+  display: block;
+  width: clamp(52px, 8vw, 84px);
+  height: auto;
+  margin-inline: auto;
+  overflow: visible;
+}
+
+.cloth {
+  fill: var(--color-accent);
+}
+
+.clothFore {
+  fill: var(--color-accent-strong);
+}
+
+.mast,
+.deck {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.4;
+  fill: none;
+}

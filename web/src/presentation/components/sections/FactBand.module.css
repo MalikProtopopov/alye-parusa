@@ -1,0 +1,68 @@
+.band {
+  padding-block: var(--space-xl);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.sand {
+  background: var(--color-bg-elevated);
+}
+
+.caption {
+  font-size: var(--step--1);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-accent-strong);
+  margin-bottom: var(--space-md);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  /* Одна колонка на узких экранах: доля 1fr не умеет быть уже своего
+     содержимого, а кадастровый номер «05:09:000045:476» в две колонки
+     не помещается и распирает страницу целиком. */
+  grid-template-columns: 1fr;
+  gap: var(--space-md) 0;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0 var(--space-md);
+  border-left: 1px solid var(--color-line);
+  /* иначе длинное значение задаёт колонке минимум по содержимому */
+  min-width: 0;
+}
+
+.value {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--step-1);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-wrap: balance;
+}
+
+.chipLabel {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
+@media (min-width: 480px) {
+  .list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .list {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

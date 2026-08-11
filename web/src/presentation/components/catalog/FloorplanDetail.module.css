@@ -1,0 +1,82 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.mediaReveal {
+  min-width: 0;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-quay);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.img {
+  object-fit: cover;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.priceRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.priceLabel {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
+.teaser {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: var(--space-md);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+}
+
+.teaserValue {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-1);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.teaserLink {
+  font-weight: 600;
+  font-size: var(--step--1);
+  color: var(--color-accent-strong);
+  transition: color 0.25s ease;
+}
+
+.teaserLink:hover {
+  color: var(--color-accent);
+}
+
+.description {
+  margin-top: var(--space-xl);
+  max-width: 46rem;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-2xl);
+  }
+}

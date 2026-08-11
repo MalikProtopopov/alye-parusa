@@ -1,0 +1,9 @@
+.grid {
+  margin-top: var(--space-xl);
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-lg);
+}

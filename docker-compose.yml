@@ -1,0 +1,110 @@
+# Алые Паруса — локальная демо-сборка (полный стек).
+# Запуск: docker compose up --build
+# Клиентский сайт → http://localhost:3000
+# Админка        → http://localhost:3001
+# API (Swagger)  → http://localhost:8000/docs
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: parusa
+      POSTGRES_PASSWORD: parusa
+      POSTGRES_DB: parusa
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parusa -d parusa"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # S3-совместимое хранилище медиа (локальная замена AWS S3).
+  # Консоль: http://localhost:9001 (parusa / parusa-secret)
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: parusa
+      MINIO_ROOT_PASSWORD: parusa-secret
+    volumes:
+      - miniodata:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://parusa:parusa@postgres:5432/parusa
+      CORS_ORIGINS: http://localhost:3000,http://localhost:3001
+      NOTIFY_CHANNEL: telegram
+      # Telegram-уведомления о заявках: заполнить токен/чат — иначе только лог
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+      ADMIN_URL: http://localhost:3001
+      JWT_SECRET: dev-secret-change-me
+      # Медиа в MinIO; бакет создаётся автоматически при старте.
+      # Файлы отдаёт сам API по /media/<файл> — единый домен, без CORS.
+      MEDIA_BACKEND: s3
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: parusa-media
+      S3_ACCESS_KEY: parusa
+      S3_SECRET_KEY: parusa-secret
+      MEDIA_DIR: /data/media
+    volumes:
+      # Резервный локальный каталог (используется при MEDIA_BACKEND=local)
+      - mediadata:/data/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  # Публичный сайт этого проекта (scroll-scrubbed лендинг, web/).
+  # Ходит в backend по внутренней сети (API_URL), браузер — по NEXT_PUBLIC_API_URL.
+  client:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        API_URL: http://backend:8000
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      API_URL: http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+  admin:
+    build:
+      context: ./frontend-admin
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        NEXT_PUBLIC_SHOW_DEMO_CREDS: "1"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_SHOW_DEMO_CREDS: "1"
+    depends_on:
+      - backend
+    ports:
+      - "3001:3001"
+
+volumes:
+  pgdata:
+  mediadata:
+  miniodata:

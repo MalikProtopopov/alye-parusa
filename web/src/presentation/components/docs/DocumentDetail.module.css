@@ -1,0 +1,18 @@
+.detail {
+  max-width: 46rem;
+}
+
+.body {
+  font-size: var(--step-0);
+}
+
+.fallback {
+  color: var(--color-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}

@@ -1,0 +1,102 @@
+/* Карточка планировки: доминирует чертёж, подписи живут прямо на бумаге.
+   Никакой «коробки с рамкой и тенью» — от неё сетка каталога читалась как
+   магазинная витрина. Границей служит сам лист чертежа. */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  color: inherit;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.card:hover .media {
+  border-color: var(--color-line-strong);
+}
+
+.card:hover .title {
+  color: var(--color-accent-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+  }
+}
+
+/* Лист чертежа: тёплая подложка + волосяная рамка, пропорция ближе к
+   квадрату — планы читаются лучше, чем в «пейзажном» 4:3. */
+.media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--color-bg-sand);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.img {
+  object-fit: contain; /* чертёж не обрезаем */
+  padding: var(--space-sm);
+}
+
+.badge,
+.status {
+  position: absolute;
+  top: var(--space-xs);
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+}
+
+/* Категория — просто подпись на листе, без «пилюли» */
+.badge {
+  left: var(--space-xs);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+}
+
+/* Статус — единственное цветное пятно на карточке */
+.status {
+  right: var(--space-xs);
+  padding: 0.25em 0.7em;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  font-weight: 600;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--space-sm);
+  padding: var(--space-sm) 0 0;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: var(--space-sm);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-0);
+  letter-spacing: -0.01em;
+  transition: color 0.25s ease;
+}
+
+.meta {
+  grid-column: 1;
+  font-size: var(--step--1);
+  color: var(--color-muted);
+}
+
+/* Цена — в правом углу, на одной базовой линии с названием */
+.price {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  white-space: nowrap;
+}

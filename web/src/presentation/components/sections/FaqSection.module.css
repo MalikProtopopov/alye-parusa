@@ -1,0 +1,70 @@
+.list {
+  margin-top: var(--space-xl);
+  border-top: 1px solid var(--color-line-strong);
+  max-width: 52rem;
+}
+
+.item {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--step-1);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.25s ease;
+}
+
+.question::-webkit-details-marker {
+  display: none;
+}
+
+.question:hover {
+  color: var(--color-accent-strong);
+}
+
+/* the plus that becomes a minus */
+.marker {
+  position: relative;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.marker::before,
+.marker::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--color-accent);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.marker::before {
+  width: 100%;
+  height: 2px;
+}
+
+.marker::after {
+  width: 2px;
+  height: 100%;
+}
+
+.item[open] .marker::after {
+  transform: scaleY(0);
+}
+
+.answer {
+  padding-bottom: var(--space-md);
+  color: var(--color-muted);
+  max-width: 46rem;
+}

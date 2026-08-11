@@ -1,0 +1,103 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Переход по якорю не должен прятать заголовок под липкой шапкой: браузер
+   останавливает прокрутку на этот отступ выше цели. Влияет только на переходы,
+   на раскладку — нет. */
+[id] {
+  scroll-margin-top: calc(var(--header-h) + var(--space-sm));
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Non-repeating film grain — tactility of printed paper. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display, "Trebuchet MS", system-ui, sans-serif);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  /* Русские слова длиннее английских, и на узком экране одно слово способно
+     перерасти строку. Сначала пробуем перенос по слогам (у <html> задан
+     lang="ru"), а если словаря нет — рвём слово, но не выпускаем за экран:
+     обрезанный по краю заголовок хуже переноса. */
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* Текст тоже не должен разъезжать экран из-за длинного слова или адреса */
+p,
+li,
+dd,
+figcaption {
+  overflow-wrap: break-word;
+}
+
+img,
+picture,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}

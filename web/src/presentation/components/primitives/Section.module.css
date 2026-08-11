@@ -1,0 +1,22 @@
+.section {
+  position: relative;
+  padding-block: var(--space-2xl);
+}
+
+.base {
+  background: var(--color-bg);
+}
+
+.elevated {
+  background: var(--color-bg-elevated);
+}
+
+.sand {
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-sand) 100%);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--space-3xl);
+  }
+}

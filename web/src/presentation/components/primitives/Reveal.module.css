@@ -1,0 +1,36 @@
+/* Visible by default — animations only apply once armed on the client. */
+.reveal {
+  will-change: opacity, transform;
+}
+
+.armed.rise {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+}
+
+.armed.rise.in {
+  opacity: 1;
+  transform: none;
+}
+
+.armed.mask {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1s var(--ease-out);
+}
+
+.armed.mask.in {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .armed.rise,
+  .armed.mask {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}

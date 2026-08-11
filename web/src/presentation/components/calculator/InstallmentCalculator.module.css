@@ -1,0 +1,391 @@
+/* Сцена рассрочки: одна тёплая подложка вместо двух карточек-панелей.
+   Условия и результат разделяет воздух и одна волосяная линия, а иерархию
+   держит типографика — ежемесячный платёж читается как заголовок сцены. */
+
+.calculator {
+  margin-top: var(--space-xl);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background: var(--color-bg-sand);
+  border-radius: var(--radius-quay);
+}
+
+/* ─────────────── условия ─────────────── */
+
+/* На узком экране условия идут под платежом — та же линия раздела, что и на
+   десктопе, только горизонтальная. */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-line-strong);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.controlHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+/* Обычное начертание: капслок оставлен единственной группе — платежу. */
+.controlLabel {
+  font-size: var(--step-0);
+  color: var(--color-muted);
+}
+
+.controlValue {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-1);
+  line-height: 1.1;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.amount {
+  width: 100%;
+  padding: 0.85em 1em;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.amount:hover {
+  border-color: var(--color-accent);
+}
+
+.amount:focus-visible {
+  border-color: var(--color-accent);
+}
+
+/* Поле выбора планировки — единственный объект сцены, которому рамка
+   действительно нужна: это управляющий элемент, а не текст. */
+.select button {
+  background: var(--color-surface);
+  padding-block: 0.9em;
+}
+
+/* ─────────────── ползунки ─────────────── */
+
+/* Дорожка рисуется псевдоэлементами, а сам input — прозрачная тач-цель 44 px.
+   --fill приходит инлайном из React и красит пройденную часть дорожки. */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 2.75rem;
+  margin-block: -0.55rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  --ring: rgba(194, 58, 41, 0.28); /* --color-accent, 28 % — кольцо фокуса */
+}
+
+.range:focus {
+  outline: none;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0 var(--fill, 0%),
+    var(--color-line-strong) var(--fill, 0%) 100%
+  );
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-top: calc((2px - 1.375rem) / 2);
+  border-radius: 50%;
+  border: 2px solid var(--color-accent);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s var(--ease-out),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.range:hover::-webkit-slider-thumb {
+  transform: scale(1.16);
+  border-color: var(--color-accent-strong);
+}
+
+.range:active::-webkit-slider-thumb {
+  transform: scale(0.94);
+  background: var(--color-accent);
+}
+
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 5px var(--ring);
+}
+
+.range::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-line-strong);
+}
+
+.range::-moz-range-progress {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s var(--ease-out),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.range:hover::-moz-range-thumb {
+  transform: scale(1.16);
+  border-color: var(--color-accent-strong);
+}
+
+.range:active::-moz-range-thumb {
+  transform: scale(0.94);
+  background: var(--color-accent);
+}
+
+.range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 5px var(--ring);
+}
+
+.range::-moz-focus-outer {
+  border: 0;
+}
+
+.rangeScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--step--1);
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ─────────────── результат ─────────────── */
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  /* На узком экране платёж открывает сцену, условия идут следом. */
+  order: -1;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xs);
+  margin: 0;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: var(--space-sm);
+}
+
+.headlineLabel {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+}
+
+.headlineValue {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 1.1rem + 3.6vw, 3.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--color-accent-strong);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.headlineNote {
+  display: block;
+  margin-top: 0.55rem;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* Подчинённые цифры: на телефоне — строки-реестр, на десктопе — ряд под
+   сплошной волосяной линией. */
+.minor {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-line-strong);
+}
+
+.minorLabel {
+  font-size: var(--step--1);
+  color: var(--color-muted);
+}
+
+.minorValue {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--step-0);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.disclaimer {
+  max-width: 46ch;
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--color-faint);
+}
+
+.unavailable {
+  max-width: 34ch;
+  font-size: var(--step-1);
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+/* ─────────────── заявка ─────────────── */
+
+.lead {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.leadTitle {
+  font-size: var(--step-1);
+  max-width: 18ch;
+}
+
+.leadNote {
+  margin-top: var(--space-2xs);
+  max-width: 32ch;
+  font-size: var(--step--1);
+  color: var(--color-muted);
+}
+
+@media (min-width: 900px) {
+  .stage {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
+    gap: var(--space-xl);
+    padding-block: var(--space-xl);
+  }
+
+  .controls {
+    gap: var(--space-lg);
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  /* Единственная линия раздела вместо второй рамки. */
+  .readout {
+    order: 0;
+    padding-left: var(--space-xl);
+    border-left: 1px solid var(--color-line-strong);
+  }
+
+  .figures {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* Строки подписей и значений общие для трёх колонок (subgrid ниже) —
+       значения стоят на одной линии, даже если подпись переносится. */
+    grid-template-rows: auto auto auto;
+    column-gap: 0;
+  }
+
+  .headline {
+    grid-column: 1 / -1;
+  }
+
+  .minor {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0.15rem;
+    padding-top: var(--space-xs);
+    padding-right: var(--space-sm);
+  }
+
+  .lead {
+    /* Колонки заявки повторяют сетку сцены — форма встаёт под цифрами. */
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
+    gap: var(--space-xl);
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  /* Тот же отступ, что у результата от волосяной линии, — левый край формы
+     встаёт ровно под цифрой платежа. */
+  .leadForm {
+    padding-left: var(--space-xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .range::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .range:hover::-webkit-slider-thumb,
+  .range:active::-webkit-slider-thumb {
+    transform: none;
+  }
+
+  .range::-moz-range-thumb {
+    transition: none;
+  }
+
+  .range:hover::-moz-range-thumb,
+  .range:active::-moz-range-thumb {
+    transform: none;
+  }
+}

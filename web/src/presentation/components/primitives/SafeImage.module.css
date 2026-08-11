@@ -1,0 +1,49 @@
+/* «Изображение не загрузилось» — sand paper, hairline glyph, quiet caption.
+   Matches the media slot it replaces: absolute under `fill`, ratio-boxed otherwise. */
+.fallback {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-2xs);
+  width: 100%;
+  height: 100%;
+  padding: var(--space-sm);
+  background: var(--color-bg-sand);
+  color: var(--color-faint);
+  text-align: center;
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+.flow {
+  position: relative;
+}
+
+.glyph {
+  display: block;
+  width: clamp(2.5rem, 26%, 4.5rem);
+  opacity: 0.45;
+}
+
+.glyph > svg {
+  width: 100%;
+  height: auto;
+}
+
+.plan {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+.caption {
+  font-size: var(--step--1);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}

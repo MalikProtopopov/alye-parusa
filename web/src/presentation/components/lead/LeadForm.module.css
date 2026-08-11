@@ -1,0 +1,301 @@
+/* Бланк, а не «карточка с полями»: строки на подчёркивании, подписи капителью,
+   кнопка по содержимому. Подложку (купон) задаёт вызывающий компонент. */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 34rem;
+  text-align: left;
+}
+
+/* Строки бланка идут подряд; слот ошибки под каждой уже даёт отбивку. */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  padding-bottom: 0.3rem;
+  font-size: var(--step--1);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  transition: color 0.25s ease;
+}
+
+.field:focus-within .label {
+  color: var(--color-accent-strong);
+}
+
+.input {
+  width: 100%;
+  padding: 0.3rem 0 0.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--step-1);
+  line-height: 1.35;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.input::placeholder {
+  color: var(--color-faint);
+  opacity: 0.7;
+}
+
+/* Фокус: вторая линия поверх волосяной — 2px алого во всю ширину строки.
+   Заменяет глобальную обводку, чтобы бланк не превращался в рамку. */
+.input:focus-visible {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+  box-shadow: 0 1px 0 0 var(--color-accent);
+}
+
+.inputInvalid,
+.inputInvalid:focus-visible {
+  border-bottom-color: var(--color-accent);
+  box-shadow: 0 1px 0 0 var(--color-accent);
+}
+
+/* Error slot is always in the layout — filling it must not shift the form. */
+.fieldError {
+  min-height: 1.15rem;
+  padding-top: 0.3rem;
+  font-size: var(--step--1);
+  line-height: 1.25;
+  color: var(--color-accent-strong);
+}
+
+.fieldFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.counter {
+  flex-shrink: 0;
+  padding-top: 0.3rem;
+  font-size: var(--step--1);
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.message {
+  resize: vertical;
+  min-height: 4.5em;
+  font-size: var(--step-0);
+  line-height: 1.5;
+}
+
+/* Honeypot: off-canvas but still in the accessibility-invisible layout —
+   never display:none, so naive bots keep filling it. */
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.consentField {
+  display: flex;
+  flex-direction: column;
+}
+
+.consent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  cursor: pointer;
+}
+
+.checkboxWrap {
+  position: relative;
+  display: inline-flex;
+  margin-top: 0.1em;
+}
+
+/* Кастомный чекбокс в фирменной палитре — дефолтный браузерный синий здесь
+   читается как чужой элемент. */
+.checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  /* 24 px — минимальная цель нажатия по WCAG 2.5.8 */
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 2px;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.checkbox:hover {
+  border-color: var(--color-accent);
+}
+
+.checkbox:checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.checkboxInvalid {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.check {
+  position: absolute;
+  inset: 0;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin: auto;
+  pointer-events: none;
+  opacity: 0;
+  fill: none;
+  stroke: var(--color-on-accent);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.15s ease;
+}
+
+.checkbox:checked ~ .check {
+  opacity: 1;
+}
+
+.consentText {
+  font-size: var(--step-0);
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.policyLink {
+  color: var(--color-accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.policyLink:hover {
+  color: var(--color-accent);
+}
+
+/* Ошибка отправки — алая линия на полях бланка, а не «алерт». */
+.formError {
+  padding-left: var(--space-xs);
+  border-left: 2px solid var(--color-accent);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--color-accent-strong);
+}
+
+.submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.9em 1.9em;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 600;
+  transition:
+    transform var(--dur) var(--ease-out),
+    background-color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.submitArrow {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.submit:hover {
+  transform: translateY(-2px);
+  background: var(--color-accent-strong);
+}
+
+.submit:hover .submitArrow {
+  transform: translateX(4px);
+}
+
+.submit:disabled {
+  opacity: 0.65;
+  cursor: progress;
+  transform: none;
+}
+
+/* Успех: знак паруса + типографика, по левому краю бланка. */
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  width: 100%;
+  max-width: 34rem;
+  text-align: left;
+}
+
+.done .doneSail {
+  width: 48px;
+  margin-inline: 0;
+  margin-bottom: var(--space-2xs);
+}
+
+.doneTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.doneText {
+  color: var(--color-muted);
+  max-width: 32ch;
+}
+
+/* В режиме высокой контрастности цветная линия фокуса не рисуется — возвращаем
+   системную обводку. */
+@media (forced-colors: active) {
+  .input:focus-visible,
+  .message:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit,
+  .submit:hover,
+  .submit:hover .submitArrow {
+    transform: none;
+  }
+}

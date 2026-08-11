@@ -1,0 +1,151 @@
+.story {
+  position: relative;
+  height: 300vh;
+  background: var(--color-bg);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.staticStory {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.poster,
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster {
+  z-index: 0;
+}
+
+.canvas {
+  z-index: 1;
+}
+
+/* darken both sides (for the side-anchored text) + top/bottom */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--scrim-ink), 0.66) 0%,
+      transparent 42%,
+      transparent 58%,
+      rgba(var(--scrim-ink), 0.66) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(var(--scrim-ink), 0.32) 0%,
+      transparent 30%,
+      transparent 68%,
+      rgba(var(--scrim-ink), 0.5) 100%
+    );
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.beat {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(30rem, 46vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding-block: var(--space-2xl);
+  color: var(--hero-fg);
+  will-change: opacity, transform;
+}
+
+.left {
+  left: var(--container-pad);
+  align-items: flex-start;
+  text-align: left;
+}
+
+.right {
+  right: var(--container-pad);
+  align-items: flex-end;
+  text-align: right;
+}
+
+.beatEyebrow {
+  font-size: var(--step--1);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-accent-soft);
+}
+
+.beatTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-3);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 30px rgba(var(--scrim-ink), 0.5);
+}
+
+.beatText {
+  font-size: var(--step-1);
+  color: var(--hero-fg-soft);
+  max-width: 24rem;
+}
+
+/* static (reduced-motion) — beats flow in a centered column */
+.staticStage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xl);
+  min-height: 100vh;
+  padding: var(--container-pad);
+}
+
+.staticBeat {
+  position: static;
+  width: auto;
+  max-width: 34rem;
+  padding-block: 0;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (max-width: 640px) {
+  .beat {
+    width: auto;
+    left: var(--container-pad);
+    right: var(--container-pad);
+    top: auto;
+    bottom: 0;
+    justify-content: flex-end;
+    padding-bottom: var(--space-2xl);
+    align-items: flex-start;
+    text-align: left;
+  }
+  .right {
+    align-items: flex-start;
+    text-align: right;
+  }
+}

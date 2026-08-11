@@ -1,0 +1,144 @@
+/* Цифры проекта — фриз во всю ширину: строка крупных чисел, разделённых
+   воздухом и волосяными линиями, без «таблицы» из ячеек. На узких экранах
+   лента прокручивается вбок, а не ломается в сетку. */
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-xl) 0 var(--space-2xl);
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--color-line-strong);
+  border-bottom: 1px solid var(--color-line);
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.facts::-webkit-scrollbar {
+  display: none;
+}
+
+.fact {
+  flex: 1 0 auto;
+  min-width: 8.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: var(--space-lg) var(--space-md) var(--space-lg) 0;
+  scroll-snap-align: start;
+}
+
+/* Разделитель — тонкая линия между числами, а не рамка вокруг каждого */
+.fact + .fact {
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--color-line);
+}
+
+.value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* Крупно, но так, чтобы шесть значений умещались в строку: считаем от
+     ширины экрана, а не берём максимум типошкалы */
+  font-size: clamp(2.1rem, 1rem + 2.4vw, 3.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+
+.label {
+  font-size: var(--step--1);
+  color: var(--color-muted);
+  max-width: 12ch;
+}
+
+/* Карточки-удобства: первая — крупная, на тёплой подложке; остальные живут
+   прямо на бумаге и разделены линиями. Асимметрия вместо четырёх равных. */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+/* Обёртка Reveal должна тянуться, иначе линии под карточками встают на
+   разной высоте и ряд выглядит рваным */
+.grid > * {
+  height: 100%;
+}
+
+.card {
+  height: 100%;
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-1);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2xs);
+}
+
+.cardText {
+  font-size: var(--step-0);
+  color: var(--color-muted);
+  max-width: 34ch;
+}
+
+/* Первая карточка — ведущая: тёплая подложка, срезанный угол «балкона»,
+   крупнее набор. */
+.lead {
+  padding: var(--space-lg);
+  background: var(--color-bg-sand);
+  border-bottom: 0;
+  border-radius: var(--radius-quay);
+}
+
+.lead .cardTitle {
+  font-size: var(--step-2);
+}
+
+.lead .cardText {
+  font-size: var(--step-1);
+  color: var(--color-text);
+  max-width: 28ch;
+}
+
+@media (min-width: 720px) {
+  /* overflow-x здесь раньше переключали в visible — и на планшете (768 px)
+     шесть значений переставали помещаться и распирали страницу. Оставляем
+     auto: пока лента помещается, полосы прокрутки не видно, а когда нет —
+     прокручивается она сама, а не весь документ. */
+
+  /* Колонка шире своего числа, а свободное место делится поровну: равные
+     доли резали «750 м» и «22–79», и они наезжали на соседа */
+  .fact {
+    flex: 1 0 auto;
+    min-width: max-content;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-xl);
+  }
+
+  .lead {
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .lead {
+    grid-row: span 2;
+  }
+}

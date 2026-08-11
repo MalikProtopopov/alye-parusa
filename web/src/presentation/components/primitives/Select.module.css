@@ -1,0 +1,195 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  width: 100%;
+  /* 0.875rem breathing room on the right — the arrow never touches the edge. */
+  padding: 0.8em 0.875rem 0.8em 1em;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.trigger:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.triggerOpen {
+  border-color: var(--color-accent);
+}
+
+.value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.valueLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.valueHint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--step--1);
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.arrow {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: 0.75rem;
+  color: var(--color-muted);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.triggerOpen .arrow {
+  transform: rotate(180deg);
+}
+
+.arrowIcon,
+.checkIcon {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  max-height: min(17rem, 50vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.25rem;
+  margin: 0;
+  list-style: none;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow);
+}
+
+.listUp {
+  top: auto;
+  bottom: calc(100% + 0.35rem);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.optionLabel {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.optionHint {
+  font-size: var(--step--1);
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Keyboard-virtual focus and hover share one state. */
+.optionActive {
+  background: var(--color-bg-sand);
+}
+
+.optionSelected {
+  background: var(--color-accent-soft);
+}
+
+.optionSelected.optionActive {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.optionSelected.optionActive .optionHint {
+  color: var(--color-on-accent);
+  opacity: 0.85;
+}
+
+.optionDisabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.optionDisabled.optionActive {
+  background: none;
+}
+
+.check {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0;
+  color: var(--color-accent-strong);
+}
+
+.optionSelected .check {
+  opacity: 1;
+}
+
+.optionSelected.optionActive .check {
+  color: var(--color-on-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .arrow,
+  .option {
+    transition: none;
+  }
+}

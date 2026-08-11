@@ -1,0 +1,69 @@
+.grid {
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--color-line-strong);
+  border-left: 1px solid var(--color-line);
+}
+
+.cell {
+  border-right: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  height: 100%;
+}
+
+.partner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  height: 100%;
+  padding: var(--space-lg) var(--space-md);
+  transition: background-color 0.35s ease;
+}
+
+a.partner:hover {
+  background: var(--color-surface);
+}
+
+.logoWrap {
+  position: relative;
+  width: min(11rem, 100%);
+  height: 3rem;
+}
+
+.logo {
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* A logo that failed to load degrades to the same wordmark as «нет логотипа». */
+.logoFallback {
+  padding: 0;
+  background: none;
+  justify-items: start;
+  align-content: center;
+  text-align: left;
+  color: inherit;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.description {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

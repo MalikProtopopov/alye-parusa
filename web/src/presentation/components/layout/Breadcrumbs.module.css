@@ -1,0 +1,42 @@
+.nav {
+  font-size: var(--step--1);
+  color: var(--color-faint);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.item + .item::before {
+  content: "/";
+  color: var(--color-line-strong);
+}
+
+.link {
+  color: inherit;
+  transition: color 0.25s ease;
+  /* цель нажатия не ниже 24 px (WCAG 2.5.8): на телефоне крошки — частый
+     способ вернуться на шаг назад */
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+}
+
+.link:hover {
+  color: var(--color-accent-strong);
+}
+
+.current {
+  color: var(--color-muted);
+}

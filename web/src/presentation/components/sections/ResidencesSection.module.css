@@ -1,0 +1,122 @@
+.finishes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+}
+
+.finish {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: inherit;
+  transition:
+    transform 0.5s var(--ease-out),
+    border-color 0.3s ease,
+    box-shadow 0.4s var(--ease-out);
+}
+
+.finish:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-line-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.finishLink {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent-strong);
+  transition: color 0.25s ease;
+}
+
+.finish:hover .finishLink {
+  color: var(--color-accent);
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+}
+
+.finishName {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--step-1);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin-bottom: var(--space-2xs);
+}
+
+.finishText {
+  color: var(--color-muted);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.figure {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+/* matted plate keyline */
+.figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.figure:hover .img {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure:hover .img {
+    transform: none;
+  }
+  .finish,
+  .finish:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .finishes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .wide {
+    grid-column: 1 / -1;
+  }
+  .wide .figure {
+    border-radius: var(--radius-quay);
+  }
+}

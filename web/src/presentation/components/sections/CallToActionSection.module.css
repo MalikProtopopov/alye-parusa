@@ -1,0 +1,100 @@
+.cta {
+  display: grid;
+  gap: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.pitch,
+.colophon {
+  min-width: 0;
+}
+
+.eyebrow {
+  font-size: var(--step--1);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.waterline {
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-block: var(--space-sm) var(--space-md);
+  background: var(--color-accent);
+}
+
+.title {
+  font-size: var(--step-3);
+  max-width: 12ch;
+}
+
+.lead {
+  margin-top: var(--space-md);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--color-muted);
+  max-width: 32ch;
+}
+
+/* Колофон: кто строит / продаёт / проектирует — строками на волосяных линиях,
+   а не тремя одинаковыми блоками по центру. */
+.brands {
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.brandRole {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+}
+
+.legal {
+  margin-top: var(--space-md);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--color-faint);
+  max-width: 46ch;
+}
+
+@media (min-width: 960px) {
+  /* Слева обращение и колофон, справа купон во всю высоту блока. */
+  .cta {
+    grid-template-columns: minmax(0, 1fr) minmax(23rem, 30rem);
+    column-gap: clamp(2.5rem, 6vw, 6rem);
+    row-gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .pitch,
+  .colophon {
+    grid-column: 1;
+  }
+
+  .couponCell {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}

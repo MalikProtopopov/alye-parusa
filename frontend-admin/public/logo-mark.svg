@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 138" width="120" height="138" role="img" aria-label="Алые Паруса — знак" fill="none">
+  <!-- Алый парус — фирменный знак «Алые Паруса».
+       Геометрия повторяет web/src/presentation/components/brand/Sail.tsx:
+       два паруса на волосяной мачте, палубная линия. -->
+  <line x1="60" y1="4" x2="60" y2="126" stroke="#201B15" stroke-width="2"/>
+  <path fill="#C23A29" d="M60 10 C 29 40, 23 92, 33 118 L60 118 Z"/>
+  <path fill="#A02D1E" d="M60 22 C 87 46, 91 95, 82 118 L60 118 Z"/>
+  <line x1="26" y1="118" x2="95" y2="118" stroke="#201B15" stroke-width="2"/>
+</svg>

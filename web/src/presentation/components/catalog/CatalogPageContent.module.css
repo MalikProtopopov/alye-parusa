@@ -1,0 +1,44 @@
+/* RichText-интро категории в шапке каталога — типографика общего lead. */
+.categoryIntro {
+  margin-top: var(--space-sm);
+  max-width: 40rem;
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+/* Полоса фильтра: живёт сразу под шапкой страницы, отделена волосяными
+   линиями — не «карточка», а линейка каталога. */
+.filterBar {
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(10px);
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-sm);
+}
+
+.count {
+  font-size: var(--step--1);
+  color: var(--color-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 599px) {
+  .count {
+    display: none;
+  }
+}
+
+.gridWrap {
+  padding-block: var(--space-lg) var(--space-2xl);
+}

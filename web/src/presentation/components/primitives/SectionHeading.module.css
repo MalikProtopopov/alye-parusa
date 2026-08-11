@@ -1,0 +1,194 @@
+/* Отбивка секции. Три подачи (chapter / aside / plain) — чтобы двенадцать
+   секций подряд не читались одним шаблоном. */
+
+.heading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.trail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+/* ── «Глава»: фолио + линия во всю ширину + крупный заголовок ── */
+
+.chapter {
+  padding-top: var(--space-lg);
+}
+
+.chapter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: left;
+}
+
+/* ── «Служебный раздел»: заголовок слева, лид справа, без номера и линии ── */
+
+@media (min-width: 900px) {
+  .aside {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: var(--space-lg);
+  }
+
+  .aside .trail {
+    padding-bottom: 0.35rem; /* лид садится на базовую линию заголовка */
+  }
+}
+
+.aside .title {
+  font-size: var(--step-2);
+  max-width: 18ch;
+}
+
+.aside .eyebrow {
+  color: var(--color-accent-strong);
+}
+
+/* ── «Простая»: только надзаголовок и заголовок ── */
+
+.plain .title {
+  font-size: var(--step-2);
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+}
+
+.center::before {
+  transform-origin: center;
+}
+
+.kicker {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.folio {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  color: var(--color-accent-strong);
+}
+
+.eyebrow {
+  font-size: var(--step--1);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.waterline {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--color-accent);
+}
+
+.title {
+  font-size: var(--step-3);
+  max-width: 22ch;
+}
+
+.center .title,
+.center .lead {
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.lead {
+  font-size: var(--step-1);
+  color: var(--color-muted);
+  line-height: 1.5;
+  max-width: 40rem;
+}
+
+.aside .lead {
+  font-size: var(--step-0);
+}
+
+.action {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* ── появление при прокрутке (только на клиенте, если движение разрешено) ── */
+.armed::before {
+  transform: scaleX(0);
+  transition: transform 0.9s var(--ease-out);
+}
+
+.armed.in::before {
+  transform: scaleX(1);
+}
+
+.armed .kicker,
+.armed .title,
+.armed .lead,
+.armed .action {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.armed .title {
+  transition-delay: 0.08s;
+}
+
+.armed .lead,
+.armed .action {
+  transition-delay: 0.16s;
+}
+
+.armed.in .kicker,
+.armed.in .title,
+.armed.in .lead,
+.armed.in .action {
+  opacity: 1;
+  transform: none;
+}
+
+.armed .waterline {
+  width: 0;
+  transition: width 0.8s var(--ease-out) 0.12s;
+}
+
+.armed.in .waterline {
+  width: 2.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .armed::before,
+  .armed .kicker,
+  .armed .title,
+  .armed .lead,
+  .armed .action,
+  .armed .waterline {
+    opacity: 1;
+    transform: none;
+    width: auto;
+    transition: none;
+  }
+}

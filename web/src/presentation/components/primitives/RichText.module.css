@@ -1,0 +1,66 @@
+.rich {
+  color: var(--color-text);
+  line-height: 1.65;
+}
+
+.rich > * + * {
+  margin-top: var(--space-sm);
+}
+
+.rich h2,
+.rich h3 {
+  margin-top: var(--space-lg);
+  letter-spacing: -0.01em;
+}
+
+.rich h2 {
+  font-size: var(--step-2);
+}
+
+.rich h3 {
+  font-size: var(--step-1);
+}
+
+.rich p {
+  max-width: 65ch;
+}
+
+.rich a {
+  color: var(--color-accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 0.25s ease;
+}
+
+.rich a:hover {
+  color: var(--color-accent);
+}
+
+.rich ul,
+.rich ol {
+  padding-left: 1.4em;
+}
+
+.rich li + li {
+  margin-top: 0.4em;
+}
+
+.rich li::marker {
+  color: var(--color-accent);
+}
+
+.rich blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: var(--space-md);
+  color: var(--color-muted);
+}
+
+.rich img {
+  border-radius: var(--radius-lg);
+}
+
+.rich hr {
+  border: none;
+  border-top: 1px solid var(--color-line);
+  margin-block: var(--space-lg);
+}

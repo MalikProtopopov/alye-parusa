@@ -1,0 +1,86 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  height: 100%;
+  cursor: pointer;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  transition:
+    transform 0.5s var(--ease-out),
+    border-color 0.3s ease,
+    box-shadow 0.4s var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-line-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+  }
+}
+
+.type {
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent-strong);
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--step-1);
+  letter-spacing: -0.01em;
+}
+
+.titleLink {
+  transition: color 0.25s ease;
+}
+
+/* Stretches the title link over the whole card — one click target. */
+.titleLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.card:hover .titleLink,
+.titleLink:focus-visible {
+  color: var(--color-accent-strong);
+}
+
+.text {
+  font-size: var(--step-0);
+  color: var(--color-muted);
+}
+
+.actions {
+  position: relative; /* above the stretched card link */
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+.action {
+  font-weight: 600;
+  font-size: var(--step-0);
+  color: var(--color-accent-strong);
+  transition: color 0.25s ease;
+}
+
+.action:hover {
+  color: var(--color-accent);
+}

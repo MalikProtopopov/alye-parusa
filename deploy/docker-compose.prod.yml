@@ -1,0 +1,133 @@
+# Продакшен-стек «Алые Паруса» для ОБЩЕГО сервера.
+#
+# Порты 80/443 на этой машине занимает чужой nginx (client_nginx_prod),
+# обслуживающий ещё несколько проектов. Поэтому наружу мы ничего не публикуем:
+# три веб-сервиса подключаются к его сети и он ходит в них по именам контейнеров.
+# TLS выпускает certbot того же nginx — см. deploy/nginx-apply.sh.
+#
+# Запуск: make deploy   (или docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod up -d --build)
+name: parusa
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: parusa-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: parusa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD не задан — выполните make env}
+      POSTGRES_DB: parusa
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parusa -d parusa"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Объектное хранилище для загрузок из админки. Наружу не публикуется:
+  # файлы отдаёт бэкенд через /media/{name}.
+  minio:
+    image: minio/minio:latest
+    container_name: parusa-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-parusa}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:?S3_SECRET_KEY не задан — выполните make env}
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ../backend
+    container_name: parusa-backend
+    restart: unless-stopped
+    # --proxy-headers: за прокси scheme/host берутся из X-Forwarded-*,
+    # иначе ссылки на медиа собирались бы как http:// (смешанный контент)
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips=*
+    environment:
+      DATABASE_URL: postgresql+psycopg2://parusa:${POSTGRES_PASSWORD}@postgres:5432/parusa
+      CORS_ORIGINS: https://${SITE_DOMAIN},https://${ADMIN_DOMAIN}
+      ADMIN_URL: https://${ADMIN_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET не задан — выполните make env}
+      NOTIFY_CHANNEL: telegram
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+      # Учётки создаются seed-ом при первом старте и потом не перезаписываются
+      SEED_SUPERADMIN_EMAIL: ${SEED_SUPERADMIN_EMAIL:-admin@alyeparusa.local}
+      SEED_SUPERADMIN_PASSWORD: ${SEED_SUPERADMIN_PASSWORD:?пароль суперадмина не задан — выполните make env}
+      SEED_MANAGER_EMAIL: ${SEED_MANAGER_EMAIL:-manager@alyeparusa.local}
+      SEED_MANAGER_PASSWORD: ${SEED_MANAGER_PASSWORD:?пароль менеджера не задан — выполните make env}
+      MEDIA_BACKEND: s3
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: ${S3_BUCKET:-parusa-media}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-parusa}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      MEDIA_DIR: /data/media
+    volumes:
+      - mediadata:/data/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - default
+      - web
+
+  # Публичный сайт. В браузере ходит на домен API, на сервере — по внутренней сети.
+  client:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
+        NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
+        API_URL: http://backend:8000
+    container_name: parusa-client
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      API_URL: http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - default
+      - web
+
+  admin:
+    build:
+      context: ../frontend-admin
+      args:
+        NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
+        # Без этого ссылки «На сайте ↗» уводят на localhost: значение
+        # вшивается в бандл на сборке, задать его позже уже поздно
+        NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
+    container_name: parusa-admin
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
+    depends_on:
+      - backend
+    networks:
+      - default
+      - web
+
+networks:
+  # Внутренняя сеть проекта: база и хранилище видны только своим
+  default:
+  # Сеть общего nginx: он резолвит наши контейнеры по имени
+  web:
+    external: true
+    name: ${NGINX_NETWORK:-client_network_prod}
+
+volumes:
+  pgdata:
+  mediadata:
+  miniodata:
