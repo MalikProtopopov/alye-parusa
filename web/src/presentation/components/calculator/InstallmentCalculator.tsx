@@ -21,8 +21,11 @@ export interface CalculatorPlanOption {
 
 const CUSTOM = "custom";
 
-// Неразрывный пробел: «30 %» не должно разрываться между строк
+// Неразрывный пробел: «30 %» и «36 мес» не должны разрываться между строк.
+// Собираем подписи функциями: в тексте JSX escape-последовательность не
+// раскрывается и вывелась бы на страницу буквально.
 const pctLabel = (fraction: number) => `${Math.round(fraction * 100)}\u00A0%`;
+const monthsLabel = (months: number) => `${months}\u00A0мес`;
 
 /** Русские числительные для подписи под платежом. */
 function pluralRu(n: number, one: string, few: string, many: string): string {
@@ -197,7 +200,7 @@ export function InstallmentCalculator({
           <label className={styles.control}>
             <span className={styles.controlHead}>
               <span className={styles.controlLabel}>Срок рассрочки</span>
-              <output className={styles.controlValue}>{months}\u00A0мес</output>
+              <output className={styles.controlValue}>{monthsLabel(months)}</output>
             </span>
             <input
               className={styles.range}
@@ -211,8 +214,8 @@ export function InstallmentCalculator({
               aria-label="Срок рассрочки, месяцев"
             />
             <span className={styles.rangeScale}>
-              <span>{params.termMinMonths}\u00A0мес</span>
-              <span>{params.termMaxMonths}\u00A0мес</span>
+              <span>{monthsLabel(params.termMinMonths)}</span>
+              <span>{monthsLabel(params.termMaxMonths)}</span>
             </span>
           </label>
         </div>
