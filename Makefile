@@ -201,7 +201,7 @@ db-shell: ## Консоль psql
 
 .PHONY: clean-test-data
 clean-test-data: ## Удалить тестовые заявки из базы (боевая база должна быть чистой)
-	@$(COMPOSE) exec -T postgres psql -U $(DB_USER) -d $(DB_NAME) -c "DELETE FROM leads;"
+	@$(COMPOSE) exec -T postgres psql -U $(DB_USER) -d $(DB_NAME) -c "DELETE FROM lead;"
 	@echo -e "  $(G)заявки очищены$(N)"
 
 # ─────────────────────────── Локальная разработка ───────────────────────────
