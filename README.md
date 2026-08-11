@@ -8,15 +8,16 @@
 backend/          FastAPI + SQLAlchemy + PostgreSQL — API, админ-API, медиа
 frontend-admin/   Next.js — админ-панель (CMS)
 web/              Next.js — публичный сайт
-deploy/           продакшен: Caddy + docker-compose
+deploy/           продакшен: compose под общий nginx, SSL, врезка доменов
 docs/             документация (см. ниже)
 scripts/          вспомогательные скрипты
 Makefile          установка и обновление: make help
 docker-compose.yml   локальный стек целиком
 
-Исходники видео (materials/), тексты проекта (content/) и коммерческие
-документы в репозиторий не входят: он публичный.
 ```
+
+Исходники видео (`materials/`), тексты проекта (`content/`) и коммерческие
+документы в репозиторий не входят: он публичный.
 
 ## Боевой сайт
 
@@ -62,20 +63,19 @@ make dev-up          # или docker compose up --build
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Локальная разработка без Docker, тесты, гейты, частые грабли |
 | [docs/API.md](docs/API.md) | Эндпоинты, авторизация, коды ошибок, конвенции |
 | [docs/CONTENT-MAP.md](docs/CONTENT-MAP.md) | Какой раздел админки за какой блок сайта отвечает |
-| [docs/DEPLOY.md](docs/DEPLOY.md) | Продакшен: переменные, Caddy, первый запуск, бэкапы |
+| [docs/DEPLOY.md](docs/DEPLOY.md) | Продакшен: домены, секреты, обновление, бэкапы |
 | [docs/MEDIA.md](docs/MEDIA.md) | Hero-видео: как собрано и как пересобрать |
 | [web/README.md](web/README.md) | Внутреннее устройство сайта (архитектура слоёв, скролл-hero) |
-| [docs/estimate/](docs/estimate/) | Смета и описание проекта для заказчика |
 
 ## Стек
 
 - **Backend:** Python 3.11, FastAPI, SQLAlchemy 2.0 (sync), PostgreSQL 16, JWT-авторизация, pytest
 - **Сайт:** Next.js 15 (App Router, RSC), React 19, TypeScript strict, CSS Modules, GSAP + Lenis, Vitest
 - **Админка:** Next.js 15, React 19, TypeScript strict, конфигурируемые ресурсы (без UI-фреймворка)
-- **Инфраструктура:** Docker Compose, MinIO (S3-совместимое хранилище), Caddy (TLS + прокси)
+- **Инфраструктура:** Docker Compose, MinIO (S3-совместимое хранилище), nginx + Let's Encrypt
 
 ## Контент
 
-Тексты, цифры и позиционирование лежат в [content/](content/) — это источник правды
-для seed-данных и для правок в админке. Исходные медиа (видео, рендеры, фото
-площадки, презентации) — в [materials/](materials/).
+Тексты и цифры проекта зашиты в seed (`backend/app/seed.py`) и дальше правятся
+через админку — карта соответствия разделов и блоков в
+[docs/CONTENT-MAP.md](docs/CONTENT-MAP.md).
