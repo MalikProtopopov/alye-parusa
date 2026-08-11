@@ -10,16 +10,29 @@ frontend-admin/   Next.js — админ-панель (CMS)
 web/              Next.js — публичный сайт
 deploy/           продакшен: Caddy + docker-compose
 docs/             документация (см. ниже)
-content/          исходные тексты проекта (источник контента для seed)
-materials/        исходники: видео, рендеры, фото, презентации
 scripts/          вспомогательные скрипты
+Makefile          установка и обновление: make help
 docker-compose.yml   локальный стек целиком
+
+Исходники видео (materials/), тексты проекта (content/) и коммерческие
+документы в репозиторий не входят: он публичный.
 ```
 
-## Быстрый старт
+## Боевой сайт
+
+| Что | Адрес |
+|---|---|
+| Сайт | https://cherkesov.mediann.dev |
+| Админка | https://admin.cherkesov.mediann.dev |
+| API | https://api.cherkesov.mediann.dev/docs |
+
+Обновление боевого сервера — `make deploy` в `/opt/parusa` (см.
+[docs/DEPLOY.md](docs/DEPLOY.md)).
+
+## Быстрый старт локально
 
 ```bash
-docker compose up --build
+make dev-up          # или docker compose up --build
 ```
 
 Бэкенд на старте сам создаёт таблицы, применяет DDL-патчи и заливает seed-контент
