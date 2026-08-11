@@ -51,20 +51,22 @@ if [ ${#NEED[@]} -eq 0 ]; then
   exit 0
 fi
 
-log "запрашиваю сертификаты: ${NEED[*]}"
-ARGS=()
-for d in "${NEED[@]}"; do ARGS+=(-d "$d"); done
-
-docker run --rm \
-  -v "$CERT_VOLUME":/etc/letsencrypt \
-  -v "$WEBROOT_VOLUME":/var/www/certbot \
-  certbot/certbot certonly \
-    --webroot -w /var/www/certbot \
-    "${ARGS[@]}" \
-    --email "$EMAIL" \
-    --agree-tos --no-eff-email \
-    --non-interactive \
-    --keep-until-expiring
+# По отдельному сертификату на домен. Одним запросом certbot выпустил бы общий
+# сертификат с именем первого домена, а nginx ищет файлы по пути
+# live/<домен>/ — и для остальных доменов их бы просто не было.
+for d in "${NEED[@]}"; do
+  log "запрашиваю сертификат: $d"
+  docker run --rm \
+    -v "$CERT_VOLUME":/etc/letsencrypt \
+    -v "$WEBROOT_VOLUME":/var/www/certbot \
+    certbot/certbot certonly \
+      --webroot -w /var/www/certbot \
+      --cert-name "$d" -d "$d" \
+      --email "$EMAIL" \
+      --agree-tos --no-eff-email \
+      --non-interactive \
+      --keep-until-expiring || warn "не удалось выпустить для $d"
+done
 
 log "готово. Проверка:"
 for d in "${DOMAINS[@]}"; do
