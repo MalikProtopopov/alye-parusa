@@ -167,7 +167,10 @@ backup: db-backup media-backup ## Резервная копия базы и за
 .PHONY: db-backup
 db-backup: ## Дамп базы в backups/
 	@mkdir -p $(BACKUP_DIR)
-	@$(COMPOSE) exec -T postgres pg_dump -U $(DB_USER) $(DB_NAME) | gzip > $(BACKUP_DIR)/db-$(STAMP).sql.gz
+	@# --clean --if-exists: дамп сам пересоздаёт объекты, поэтому восстановление
+	@# не требует удаления базы и работает на живом стеке
+	@$(COMPOSE) exec -T postgres pg_dump -U $(DB_USER) --clean --if-exists \
+	  --no-owner --no-privileges $(DB_NAME) | gzip > $(BACKUP_DIR)/db-$(STAMP).sql.gz
 	@echo -e "  $(G)база:$(N) $(BACKUP_DIR)/db-$(STAMP).sql.gz"
 
 .PHONY: media-backup
@@ -182,10 +185,12 @@ db-restore: ## Восстановить базу из дампа: make db-restor
 	@test -n "$(FILE)" || { echo -e "  $(R)укажите FILE=путь/к/дампу.sql.gz$(N)"; exit 1; }
 	@test -f "$(FILE)" || { echo -e "  $(R)нет файла $(FILE)$(N)"; exit 1; }
 	@echo -e "  $(Y)база будет перезаписана содержимым $(FILE)$(N)"
+	@# Базу не удаляем: дамп сделан с --clean --if-exists и пересоздаёт объекты
+	@# сам. Удаление базы требовало бы отдельной сессии вне транзакции и рвало
+	@# бы соединения других контейнеров.
 	@$(COMPOSE) stop backend >/dev/null
-	@$(COMPOSE) exec -T postgres psql -U $(DB_USER) -d postgres -c \
-	  "DROP DATABASE IF EXISTS $(DB_NAME); CREATE DATABASE $(DB_NAME) OWNER $(DB_USER);" >/dev/null
-	@gunzip -c "$(FILE)" | $(COMPOSE) exec -T postgres psql -U $(DB_USER) -d $(DB_NAME) >/dev/null
+	@gunzip -c "$(FILE)" | $(COMPOSE) exec -T postgres \
+	  psql -U $(DB_USER) -d $(DB_NAME) -v ON_ERROR_STOP=0 --quiet >/dev/null
 	@$(COMPOSE) start backend >/dev/null
 	@$(MAKE) --no-print-directory wait
 	@echo -e "  $(G)база восстановлена$(N)"
